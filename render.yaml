@@ -1,0 +1,48 @@
+services:
+  # 1. Frontend / Landing Site + Dashboard
+  - type: web
+    name: hydrotwin-web
+    env: docker
+    dockerfilePath: ./website/Dockerfile
+    plan: starter
+    envVars:
+      - key: API_URL
+        fromService:
+          type: web
+          name: hydrotwin-api
+          property: host
+
+  # 2. FastAPI Backend & ML Models
+  - type: web
+    name: hydrotwin-api
+    env: docker
+    dockerfilePath: ./api/Dockerfile
+    plan: starter
+    envVars:
+      - key: MONGO_URI
+        fromService:
+          type: pserv
+          name: hydrotwin-mongo
+          property: host
+      - key: MQTT_HOST
+        fromService:
+          type: pserv
+          name: hydrotwin-mqtt
+          property: host
+
+  # 3. Private MQTT Service (Internal Only)
+  - type: pserv
+    name: hydrotwin-mqtt
+    env: docker
+    dockerfilePath: ./mqtt/Dockerfile
+    plan: starter
+
+  # 4. Private MongoDB Database (Internal Only)
+  - type: pserv
+    name: hydrotwin-mongo
+    env: docker
+    dockerfilePath: ./mongodb/Dockerfile
+    disk:
+      name: mongo-data
+      mountPath: /data/db
+      sizeGB: 10
