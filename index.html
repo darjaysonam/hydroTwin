@@ -1,25 +1,355 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Bhutan HydroTwin</title>
-</head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bhutan HydroTwin | AI Control Center</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0d1117;
+            --bg-card: #161b22;
+            --border-color: #30363d;
+            --accent-blue: #58a6ff;
+            --accent-green: #3fb950;
+            --accent-amber: #d29922;
+            --text-main: #c9d1d9;
+            --text-heading: #f0f6fc;
+            --text-muted: #8b949e;
+        }
 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 2.5rem 1rem;
+            background: linear-gradient(180deg, #1f2937 0%, var(--bg-card) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
+        }
+
+        .badge {
+            display: inline-block;
+            background-color: rgba(88, 166, 255, 0.15);
+            color: var(--accent-blue);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(88, 166, 255, 0.3);
+        }
+
+        h1 {
+            color: var(--text-heading);
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto 1.5rem auto;
+        }
+
+        .system-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: rgba(63, 185, 80, 0.1);
+            color: var(--accent-green);
+            padding: 0.4rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border: 1px solid rgba(63, 185, 80, 0.2);
+        }
+
+        .pulse {
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent-green);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent-green);
+        }
+
+        .section-title {
+            color: var(--text-heading);
+            font-size: 1.5rem;
+            margin: 2.5rem 0 1.25rem 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title i {
+            color: var(--accent-blue);
+        }
+
+        /* Capabilities Grid */
+        .grid-capabilities {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .cap-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.25rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .cap-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-blue);
+        }
+
+        .cap-icon {
+            background-color: rgba(88, 166, 255, 0.1);
+            color: var(--accent-blue);
+            width: 38px;
+            height: 38px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 1.1rem;
+        }
+
+        .cap-text {
+            color: var(--text-heading);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        /* Architecture Section */
+        .arch-container {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .tree-list {
+            list-style: none;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.9rem;
+        }
+
+        .tree-list li {
+            margin-bottom: 0.75rem;
+        }
+
+        .tree-folder {
+            color: var(--accent-amber);
+            font-weight: 600;
+        }
+
+        .tree-desc {
+            color: var(--text-muted);
+            margin-left: 1.5rem;
+            margin-top: 0.25rem;
+            display: block;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-size: 0.88rem;
+        }
+
+        .component-tag {
+            display: inline-block;
+            background-color: rgba(139, 148, 158, 0.15);
+            color: var(--text-main);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin: 2px;
+            border: 1px solid rgba(139, 148, 158, 0.2);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
 <body>
 
-<h1>Bhutan HydroTwin</h1>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <span class="badge">PHASE-IV DIGITAL TWIN PROTOTYPE</span>
+            <h1>Bhutan HydroTwin AI Control Center</h1>
+            <p class="subtitle">
+                An integrated industrial digital twin and predictive maintenance platform engineered for Pelton hydro turbine asset optimization and remaining useful life forecasting.
+            </p>
+            <div class="system-status">
+                <span class="pulse"></span> System Architecture & Capabilities Fully Consolidated
+            </div>
+        </header>
 
-<h3>AI Powered Hydropower Digital Twin Platform</h3>
+        <!-- Operational Capabilities -->
+        <h2 class="section-title"><i class="fa-solid fa-microchip"></i> Consolidated Operational Capabilities</h2>
+        <div class="grid-capabilities">
+            <div class="cap-card">
+                <div class="cap-icon"><i class="fa-solid fa-gauge-high"></i></div>
+                <div class="cap-text">Real-Time Plant Operational Monitoring</div>
+            </div>
+            <div class="cap-card">
+                <div class="cap-icon"><i class="fa-solid fa-fan"></i></div>
+                <div class="cap-text">Pelton Turbine Digital Twin Visualization</div>
+            </div>
+            <div class="cap-card">
+                <div class="cap-icon"><i class="fa-solid fa-brain"></i></div>
+                <div class="cap-text">Artificial Intelligence Prognostics Intelligence</div>
+            </div>
+            <div class="cap-card">
+                <div class="cap-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                <div class="cap-text">Remaining Useful Life (RUL) Prediction Services</div>
+            </div>
+            <div class="cap-card">
+                <div class="cap-icon"><i class="fa-solid fa-chart-line"></i></div>
+                <div class="cap-text">Historical Telemetry Analytics</div>
+            </div>
+            <div class="cap-card">
+                <div class="cap-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                <div class="cap-text">Persistent Alarm Ledger Management</div>
+            </div>
+            <div class="cap-card">
+                <div class="cap-icon"><i class="fa-solid fa-wrench"></i></div>
+                <div class="cap-text">Maintenance Intelligence Generation</div>
+            </div>
+            <div class="cap-card">
+                <div class="cap-icon"><i class="fa-solid fa-file-pdf"></i></div>
+                <div class="cap-text">Downloadable AI Maintenance Reports</div>
+            </div>
+            <div class="cap-card">
+                <div class="cap-icon"><i class="fa-solid fa-bolt"></i></div>
+                <div class="cap-text">Energy Efficiency Analytics</div>
+            </div>
+            <div class="cap-card">
+                <div class="cap-icon"><i class="fa-solid fa-clipboard-list"></i></div>
+                <div class="cap-text">Operational Log Management Services</div>
+            </div>
+            <div class="cap-card">
+                <div class="cap-icon"><i class="fa-solid fa-robot"></i></div>
+                <div class="cap-text">Artificial Intelligence Prediction Services</div>
+            </div>
+            <div class="cap-card">
+                <div class="cap-icon"><i class="fa-solid fa-bell"></i></div>
+                <div class="cap-text">Industrial Alarm Management</div>
+            </div>
+            <div class="cap-card">
+                <div class="cap-icon"><i class="fa-solid fa-database"></i></div>
+                <div class="cap-text">MongoDB Historian Integration</div>
+            </div>
+            <div class="cap-card">
+                <div class="cap-icon"><i class="fa-solid fa-arrows-rotate"></i></div>
+                <div class="cap-text">Eclipse Ditto Digital Twin Synchronization</div>
+            </div>
+            <div class="cap-card">
+                <div class="cap-icon"><i class="fa-solid fa-desktop"></i></div>
+                <div class="cap-text">Industrial Control Room Visualization Framework</div>
+            </div>
+        </div>
 
-<p>Coming Soon...</p>
+        <!-- Dashboard Source Architecture -->
+        <h2 class="section-title"><i class="fa-solid fa-folder-tree"></i> Front-End Component Architecture (`dashboard/src/`)</h2>
+        <div class="arch-container">
+            <ul class="tree-list">
+                <li>
+                    <span class="tree-folder"><i class="fa-regular fa-folder-open"></i> components/</span>
+                    <span class="tree-desc">
+                        Dedicated UI widget components: 
+                        <span class="component-tag">AIEngineMetrics</span>
+                        <span class="component-tag">AIEngineStatus</span>
+                        <span class="component-tag">AIInsights</span>
+                        <span class="component-tag">AIPrediction</span>
+                        <span class="component-tag">AIReportGenerator</span>
+                        <span class="component-tag">AlarmPanel</span>
+                        <span class="component-tag">AssetLifecycle</span>
+                        <span class="component-tag">Charts</span>
+                        <span class="component-tag">EnergyAnalytics</span>
+                        <span class="component-tag">EventAuditLogger</span>
+                        <span class="component-tag">FailureForecast</span>
+                        <span class="component-tag">Gauges</span>
+                        <span class="component-tag">Header</span>
+                        <span class="component-tag">Health</span>
+                        <span class="component-tag">Historian</span>
+                        <span class="component-tag">MaintenanceRecommendation</span>
+                        <span class="component-tag">MaintenanceScheduler</span>
+                        <span class="component-tag">ManagementConsole</span>
+                        <span class="component-tag">OperationalIntelligence</span>
+                        <span class="component-tag">PlantLogs</span>
+                        <span class="component-tag">SafetyAlarm</span>
+                        <span class="component-tag">StatusCards</span>
+                        <span class="component-tag">SystemHealth</span>
+                        <span class="component-tag">Turbine</span>
+                    </span>
+                </li>
+                <li>
+                    <span class="tree-folder"><i class="fa-regular fa-folder-open"></i> layout/</span>
+                    <span class="tree-desc">Layout containers: <code>DashboardGrid</code>, <code>Panel</code>, <code>SectionTitle</code>, <code>StatusBadge</code>, <code>Theme</code>, and <code>dashboardSections/</code> (zone wrapper components).</span>
+                </li>
+                <li>
+                    <span class="tree-folder"><i class="fa-regular fa-folder-open"></i> hooks/</span>
+                    <span class="tree-desc">Custom hooks managing telemetry streams: <code>useSensorData.js</code>, <code>useWebSocket.js</code>.</span>
+                </li>
+                <li>
+                    <span class="tree-folder"><i class="fa-regular fa-folder-open"></i> services/</span>
+                    <span class="tree-desc">API client interfaces: <code>api.js</code>, <code>dittoApi.js</code>.</span>
+                </li>
+                <li>
+                    <span class="tree-folder"><i class="fa-regular fa-file-code"></i> pages/Dashboard.jsx</span>
+                    <span class="tree-desc">Top-level dashboard page assembling all seven operational zones into a unified view.</span>
+                </li>
+            </ul>
+        </div>
 
-<ul>
-<li>River Prediction</li>
-<li>Rainfall Forecasting</li>
-<li>Reservoir Management</li>
-<li>Energy Analytics</li>
-<li>Voice AI Assistant</li>
-<li>Digital Twin Models</li>
-</ul>
+        <footer>
+            <p>Druk Green Power Corporation Limited (DGPC) Pitch Presentation &mdash; HydroTwin Digital Twin Platform</p>
+        </footer>
+    </div>
 
 </body>
 </html>
