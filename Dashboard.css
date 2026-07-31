@@ -1,0 +1,176 @@
+/* Industrial Controls styling context layout */
+.industrial-metric-list {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 0;
+}
+
+.metric-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.4rem 0;
+}
+
+.metric-label {
+  color: #9ca3af; /* muted gray labels */
+  font-size: 0.875rem;
+}
+
+.metric-value {
+  font-weight: 600;
+  color: #f3f4f6;
+}
+
+.metric-divider {
+  border: 0;
+  border-top: 1px solid #1f2937;
+  margin: 0.2rem 0;
+}
+
+/* Status Badge Colors */
+.text-green, .status-stable, .status-online, .type-success .log-msg { color: #10b981 !important; }
+.text-red, .status-critical, .status-error, .type-error .log-msg { color: #ef4444 !important; }
+.status-medium, .type-warning .log-msg { color: #f59e0b !important; }
+.status-low { color: #3b82f6; }
+
+/* Grid blocks for Engine Metrics inside Intelligence Section */
+.metric-grid-2x2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.metric-cell {
+  background: #111827;
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #1f2937;
+  display: flex;
+  flex-direction: column;
+}
+
+.metric-label-sm {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.metric-value-sm {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+/* Industrial Export Buttons */
+.btn-industrial-sm {
+  background: #1f2937;
+  border: 1px solid #374151;
+  color: #d1d5db;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-industrial-sm:hover {
+  background: #374151;
+  color: #ffffff;
+}
+
+/* Filter Tag Buttons styling */
+.btn-filter-tag {
+  background: #111827;
+  border: 1px solid #374151;
+  color: #9ca3af;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.7rem;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.btn-filter-tag.active {
+  background: #2563eb;
+  color: white;
+  border-color: #3b82f6;
+}
+
+/* Log Source Badges styling */
+.badge-source {
+  padding: 0 0.25rem;
+  border-radius: 2px;
+  font-size: 0.7rem;
+}
+.source-mqtt { background: #1e3a8a; color: #93c5fd; }
+.source-mongo { background: #064e3b; color: #6ee7b7; }
+.source-ai_eng { background: #581c87; color: #d8b4fe; }
+.source-system { background: #374151; color: #e5e7eb; }
+
+/* Digital Twin Flow Architecture Graphic Styles */
+.digital-twin-mimic-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.schematic-flow-grid {
+  display: flex;
+  flex-direction: column;
+  background-color: #05070a !important;
+  border-color: #1f2937 !important;
+}
+
+.flow-step {
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  padding: 0.6rem;
+  border-radius: 4px;
+}
+
+.flow-arrow {
+  font-family: monospace;
+  font-weight: bold;
+  animation: pulseFlow 2s infinite ease-in-out;
+}
+
+.text-blue-400 { color: #60a5fa; }
+.text-blue-500 { color: #3b82f6; }
+.text-amber-400 { color: #fbbf24; }
+.text-green-400 { color: #34d399; }
+.text-green-500 { color: #10b981; }
+.text-purple-400 { color: #c084fc; }
+
+@keyframes pulseFlow {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+/* Energy and Grid Tracking parameters */
+.text-blue-400 {
+  color: #60a5fa !important;
+}
+
+.font-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+/* Print/Save Document Optimization rules */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .report-preview-manifest, .report-preview-manifest * {
+    visibility: visible;
+  }
+  .report-preview-manifest {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background: white !important;
+    color: black !important;
+    border: none !important;
+  }
+  .report-preview-manifest .text-white {
+    color: black !important;
+  }
+}
